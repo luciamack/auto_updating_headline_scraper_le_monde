@@ -1,5 +1,5 @@
 # You can name this whatever you want
-name: update
+name: weekly update
 
 # You will get an error on the automatic updates committing
 # if you do not have this line
@@ -7,28 +7,28 @@ name: update
 # you see will not have it (but you need it now!!!)
 permissions:
   contents: write
-  
+
 # The 'on' section is about when this is run
 # workflow_dispatch makes there be a button on GitHub to let you run it manually
 # schedule and cron make it run at certain frequencies
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '0 20 * * 0'
 jobs:
   daily:
     runs-on: ubuntu-latest
     steps:
     - name: Check out this repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v5
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v6
       with:
-        python-version: '3.10'
+        python-version: '3.13'
     - name: Install all necessary packages
-      run: pip install jupyter lxml pandas requests beautifulsoup4 html5lib
+      run: pip install jupyter lxml pandas numpy requests beautifulsoup4 html5lib
     - name: Scraping today's data
-      run: jupyter nbconvert --to notebook --execute "news_site_scraping.ipynb" --stdout
+      run: jupyter nbconvert --to notebook --execute "news_site_scraping.ipynb" --inplace --ExecutePreprocessor.kernel_name=python3
     - name: Commit and push any changes
       run: |-
         git config user.name "Automated"
